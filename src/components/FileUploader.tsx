@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 interface FileUploaderProps {
-  onQuizLoad: (data) => void;
+  onUploadSuccess: (shareUrl: string) => void;
 }
 
 const fadeIn = keyframes`
@@ -96,28 +96,51 @@ const ErrorMessage = styled.div`
   text-align: center;
 `;
 
-const FileUploader: React.FC<FileUploaderProps> = ({ onQuizLoad }) => {
-  const [error, setError] = useState('');
+interface FileUploaderProps {
+  onUploadSuccess: (shareUrl: string) => void;
+}
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
+  const [error, setError] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const quizData = JSON.parse(e.target?.result as string);
-        if (!quizData.questions || !Array.isArray(quizData.questions)) {
-          throw new Error('Invalid quiz format');
-        }
-        onQuizLoad(quizData);
-        setError('');
-      } catch (err) {
-        setError('Invalid JSON file. Please upload a valid QCM quiz file.');
-        console.error(err);
+    setIsUploading(true);
+    setError('');
+
+    try {
+      // Validate file type
+      if (file.type !== 'application/json') {
+        throw new Error('Please upload a JSON file');
       }
-    };
-    reader.readAsText(file);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/quizzes', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const { shareUrl } = await response.json();
+      setShareLink(shareUrl);
+      onUploadSuccess(shareUrl);
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(shareUrl);
+    } catch (err) {
+      setError(err.message || 'Failed to upload quiz');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -126,12 +149,25 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onQuizLoad }) => {
         <h2>Upload QCM Quiz File</h2>
         <p>Drag and drop your JSON file here, or click to browse</p>
         <UploadLabel>
-          Select File
-          <FileInput type="file" accept=".json" onChange={handleFileUpload} />
+          {isUploading ? 'Uploading...' : 'Select File'}
+          <FileInput
+            type="file"
+            accept=".json"
+            onChange={handleFileUpload}
+            disabled={isUploading}
+          />
         </UploadLabel>
       </UploadArea>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
+
+      {shareLink && (
+        <SampleSection>
+          <h3>Shareable Link</h3>
+          <Pre onClick={() => navigator.clipboard.writeText(shareLink)}>{shareLink}</Pre>
+          <p>Link copied to clipboard!</p>
+        </SampleSection>
+      )}
 
       <SampleSection>
         <h3>Sample QCM Quiz File</h3>

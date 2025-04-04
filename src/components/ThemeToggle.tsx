@@ -12,7 +12,7 @@ const ToggleButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
-  position: fixed;
+  position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 100;

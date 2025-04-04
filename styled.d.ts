@@ -16,6 +16,15 @@ declare module 'styled-components' {
       muted: string;
       explanationBg: string;
       cardBg: string;
+      explanationText: string;
+      highlightOption: string;
+      textSecondary: string;
+      textInverted: string;
+      divider: string;
+      warning: string;
+      info: string;
+      primaryHover: string;
+      secondaryHover: string;
     };
     mode: string;
   }

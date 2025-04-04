@@ -75,6 +75,12 @@ const OptionItem = styled.div<{
     if ($isIncorrect) return '3px solid #ef4444';
     return 'none';
   }};
+  color: ${({ theme, $isCorrect, $isIncorrect }) => {
+    if ($isCorrect) return theme.colors.highlightOption;
+    if ($isIncorrect) return theme.colors.error;
+    return theme.colors.text;
+  }};
+  font-weight: 700;
 
   &:hover {
     background: ${({ theme, $isCorrect, $isIncorrect }) => {
@@ -86,7 +92,7 @@ const OptionItem = styled.div<{
 
 const ExplanationText = styled.div`
   background: ${({ theme }) => theme.colors.explanationBg};
-  color: ${({ theme }) => (theme.mode === 'light' ? '#475569' : '#cbd5e1')};
+  color: ${({ theme }) => theme.colors.explanationText};
   padding: 0.75rem;
   border-radius: 0.375rem;
   margin-top: 0.5rem;

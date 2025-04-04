@@ -1,0 +1,80 @@
+{
+  "title": "Quiz SDAD - Data Science",
+  "description": "Ce quiz teste vos connaissances en data science, apprentissage automatique et systèmes d'aide à la décision.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Lequel des éléments suivants n'est PAS un algorithme d'apprentissage supervisé ?",
+      "options": [
+        { "text": "Arbre de Décision", "correct": false },
+        {
+          "text": "K-Means",
+          "correct": true,
+          "explanation": "K-Means est un algorithme d'apprentissage non supervisé utilisé pour le clustering."
+        },
+        { "text": "Machine à Vecteurs de Support (SVM)", "correct": false },
+        { "text": "Naïve Bayes", "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Quel est le principal objectif de l'Analyse en Composantes Principales (PCA) ?",
+      "options": [
+        {
+          "text": "Réduire le nombre de dimensions tout en préservant l'information",
+          "correct": true,
+          "explanation": "PCA réduit la dimensionnalité tout en maintenant autant de variance que possible."
+        },
+        { "text": "Augmenter la complexité des données", "correct": false },
+        { "text": "Identifier les valeurs manquantes", "correct": false },
+        { "text": "Améliorer la précision de la classification", "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Quelle méthode est utilisée pour prévenir le surapprentissage (overfitting) en apprentissage automatique ?",
+      "options": [
+        { "text": "Augmenter la taille du jeu de données", "correct": false },
+        {
+          "text": "Utiliser le dropout dans les réseaux neuronaux",
+          "correct": true,
+          "explanation": "Le dropout est une méthode de régularisation utilisée pour réduire le surapprentissage."
+        },
+        {
+          "text": "Appliquer la régularisation (L1, L2)",
+          "correct": true,
+          "explanation": "La régularisation (L1, L2) aide à réduire le surapprentissage en pénalisant les poids de modèles."
+        },
+        { "text": "Toutes les réponses ci-dessus", "correct": true }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Quelle fonction de perte est couramment utilisée dans la régression logistique ?",
+      "options": [
+        { "text": "Erreur Quadratique Moyenne", "correct": false },
+        {
+          "text": "Perte d'Entropie Croisée",
+          "correct": true,
+          "explanation": "La perte d'entropie croisée est couramment utilisée pour les problèmes de classification binaire."
+        },
+        { "text": "Perte Hinge", "correct": false },
+        { "text": "Régularisation L1", "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Quel indicateur d'évaluation est le plus approprié pour des problèmes de classification déséquilibrée ?",
+      "options": [
+        { "text": "Précision", "correct": false },
+        {
+          "text": "Courbe Précision-Rappel",
+          "correct": true,
+          "explanation": "La courbe Précision-Rappel est particulièrement utile pour les ensembles de données déséquilibrés."
+        },
+        { "text": "RMSE", "correct": false },
+        { "text": "Erreur Quadratique Totale", "correct": false }
+      ]
+    }
+  ]
+}

@@ -7,20 +7,12 @@ import { GlobalStyles } from '@/lib/styled-components';
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { QuizData } from '@/app/quiz/[id]/page';
 import { useRouter } from 'next/navigation';
 
-interface QuizData {
-  title: string;
-  description?: string;
-  questions: Array<{
-    id: number;
-    question: string;
-    options: Array<{
-      text: string;
-      correct: boolean;
-      explanation?: string;
-    }>;
-  }>;
+interface PageQuizProps {
+  quizData: QuizData;
 }
 
 interface UserAnswers {
@@ -51,27 +43,33 @@ const Title = styled.h1`
   animation: ${fadeIn} 0.6s ease-out;
 `;
 
-function App() {
-  return (
-    <ThemeProvider>
-      <ThemeContent />
-    </ThemeProvider>
-  );
-}
+const ResetButton = styled.button`
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 1.5rem;
 
-const ThemeContent: React.FC = () => {
-  const router = useRouter(); // Initialize the router
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  &:hover {
+    background: ${({ theme }) => theme.colors.secondary};
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+export const PageQuiz: React.FC<PageQuizProps> = ({ quizData }) => {
   const [showResults, setShowResults] = useState(false);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
-
-  const handleUploadSuccess = (shareUrl: string) => {
-    setShowResults(false);
-    setUserAnswers({});
-
-    // Redirect to the shared quiz URL
-    router.push(shareUrl);
-  };
 
   const handleQuizSubmit = (answers: UserAnswers) => {
     setUserAnswers(answers);
@@ -80,9 +78,8 @@ const ThemeContent: React.FC = () => {
 
   return (
     <AppContainer>
-      <Title>Quizmo</Title>
       {!quizData ? (
-        <FileUploader onUploadSuccess={handleUploadSuccess} />
+        <Title> Quiz not found</Title>
       ) : showResults ? (
         <div>
           <Quiz
@@ -105,5 +102,3 @@ const ThemeContent: React.FC = () => {
     </AppContainer>
   );
 };
-
-export default App;

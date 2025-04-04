@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Question from './Question';
+import { useRouter } from 'next/navigation';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -44,7 +45,7 @@ const QuizTitle = styled.h2`
 `;
 
 const QuizDescription = styled.p`
-  color: ${({ theme }) => (theme.mode === 'light' ? '#64748b' : '#cbd5e1')};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1rem;
 `;
 
@@ -73,6 +74,7 @@ const SubmitButton = styled.button`
   transition: all 0.2s ease;
   width: 100%;
   margin-top: 1.5rem;
+  font-weight: 700;
 
   &:hover {
     background: ${({ theme }) => theme.colors.secondary};
@@ -85,8 +87,51 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ShareButton = styled.button`
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  width: 100%;
+  &:hover {
+    background: ${({ theme }) => theme.colors.secondary};
+  }
+`;
+
+const ResetButton = styled.button`
+  background: ${({ theme }) => theme.colors.secondary};
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-weight: 700;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
 const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode }) => {
   const [currentAnswers, setCurrentAnswers] = useState<{ [key: number]: number }>(userAnswers);
+  const router = useRouter();
 
   const handleOptionSelect = (questionId: number, optionIndex: number) => {
     if (reviewMode) return;
@@ -100,6 +145,10 @@ const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(currentAnswers);
+  };
+
+  const resetQuiz = () => {
+    router.push('/');
   };
 
   const calculateScore = (): number => {
@@ -118,6 +167,10 @@ const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode
       <QuizHeader>
         <QuizTitle>{quizData.title}</QuizTitle>
         {quizData.description && <QuizDescription>{quizData.description}</QuizDescription>}
+
+        <ShareButton onClick={() => navigator.clipboard.writeText(window.location.href)}>
+          Copy Quiz Link
+        </ShareButton>
       </QuizHeader>
 
       <form onSubmit={handleSubmit}>
@@ -133,6 +186,7 @@ const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode
         ))}
 
         {!reviewMode && <SubmitButton type="submit">Submit Quiz</SubmitButton>}
+        <ResetButton onClick={resetQuiz}>Load New Quiz</ResetButton>
       </form>
 
       {reviewMode && (
