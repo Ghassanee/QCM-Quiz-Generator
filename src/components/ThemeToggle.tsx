@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 
 const ToggleButton = styled.button`
-  background: ${({ theme }: any) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.primary};
   color: white;
   border: none;
   border-radius: 2rem;

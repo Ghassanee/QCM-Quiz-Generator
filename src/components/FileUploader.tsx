@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 interface FileUploaderProps {
-  onQuizLoad: (data: any) => void;
+  onQuizLoad: (data) => void;
 }
 
 const fadeIn = keyframes`
@@ -18,8 +18,8 @@ const pulse = keyframes`
 `;
 
 const FileUploaderContainer = styled.div`
-  background: ${({ theme }: any) => theme.colors.cardBg};
-  color: ${({ theme }: any) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.cardBg};
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -32,7 +32,7 @@ const FileUploaderContainer = styled.div`
 `;
 
 const UploadArea = styled.div`
-  border: 2px dashed ${({ theme }: any) => theme.colors.border};
+  border: 2px dashed ${({ theme }) => theme.colors.border};
   border-radius: 0.75rem;
   padding: 3rem 2rem;
   text-align: center;
@@ -40,29 +40,29 @@ const UploadArea = styled.div`
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: ${({ theme }: any) => theme.colors.primary};
-    background: ${({ theme }: any) => theme.colors.cardBg};
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.cardBg};
   }
 `;
 
 const SampleSection = styled.div`
   margin-top: 30px;
   text-align: left;
-  background: ${({ theme }: any) => theme.colors.explanationBg};
+  background: ${({ theme }) => theme.colors.explanationBg};
   padding: 15px;
   border-radius: 8px;
-  border: 1px solid ${({ theme }: any) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const Pre = styled.pre`
   white-space: pre-wrap;
-  background: ${({ theme }: any) => (theme.mode === 'light' ? '#f5f5f5' : '#0f172a')};
-  color: ${({ theme }: any) => (theme.mode === 'light' ? '#0f172a' : '#f8fafc')};
+  background: ${({ theme }) => (theme.mode === 'light' ? '#f5f5f5' : '#0f172a')};
+  color: ${({ theme }) => (theme.mode === 'light' ? '#0f172a' : '#f8fafc')};
   padding: 12px;
   border-radius: 6px;
   font-size: 0.85rem;
   margin-top: 8px;
-  border: 1px solid ${({ theme }: any) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const FileInput = styled.input`

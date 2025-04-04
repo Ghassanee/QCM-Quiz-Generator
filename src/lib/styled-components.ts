@@ -9,8 +9,8 @@ export const GlobalStyles = createGlobalStyle`
   }
  
   body {
-    background: ${({ theme }: any) => theme.colors.background};
-    color: ${({ theme }: any) => theme.colors.text};
+    background: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
   }

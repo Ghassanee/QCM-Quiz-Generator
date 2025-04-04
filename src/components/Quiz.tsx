@@ -28,8 +28,8 @@ interface QuizProps {
 }
 
 const QuizContainer = styled.div`
-  background: ${({ theme }: any) => theme.colors.cardBg};
-  color: ${({ theme }: any) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.cardBg};
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -39,22 +39,22 @@ const QuizContainer = styled.div`
 const QuizTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
-  color: ${({ theme }: any) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 0.5rem;
 `;
 
 const QuizDescription = styled.p`
-  color: ${({ theme }: any) => (theme.mode === 'light' ? '#64748b' : '#cbd5e1')};
+  color: ${({ theme }) => (theme.mode === 'light' ? '#64748b' : '#cbd5e1')};
   font-size: 1rem;
 `;
 
 const ResultsSummary = styled.div`
   margin-top: 2rem;
   padding: 1.5rem;
-  background-color: ${({ theme }: any) => theme.colors.explanationBg};
+  background-color: ${({ theme }) => theme.colors.explanationBg};
   border-radius: 0.75rem;
   text-align: center;
-  border: 1px solid ${({ theme }: any) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const QuizHeader = styled.div`
@@ -62,7 +62,7 @@ const QuizHeader = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  background: ${({ theme }: any) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.primary};
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -75,7 +75,7 @@ const SubmitButton = styled.button`
   margin-top: 1.5rem;
 
   &:hover {
-    background: ${({ theme }: any) => theme.colors.secondary};
+    background: ${({ theme }) => theme.colors.secondary};
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
   }

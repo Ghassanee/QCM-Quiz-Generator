@@ -12,7 +12,9 @@ export const lightTheme: DefaultTheme = {
     error: '#ef4444', // Red 500
     muted: '#64748b', // Slate 500 for secondary text
     explanationBg: '#f1f5f9', // Slightly different from background for sections
+    cardBg: '#ffffff',
   },
+  mode: 'light',
 };
 
 export const darkTheme: DefaultTheme = {
@@ -27,7 +29,9 @@ export const darkTheme: DefaultTheme = {
     error: '#ef4444', // Red 500
     muted: '#94a3b8', // Slate 400
     explanationBg: '#1e293b', // Matches surface for consistency
+    cardBg: '#1e293b',
   },
+  mode: 'dark',
 };
 
 export type ThemeMode = 'light' | 'dark';
