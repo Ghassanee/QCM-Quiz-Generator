@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **Quizmo**
 
-## Getting Started
+🚀 **A modern, interactive quiz application built with React, TypeScript, and styled-components.**
 
-First, run the development server:
+![Demo Screenshot](https://i.imgur.com/lNpXcvm.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## **✨ Features**
+
+✔ **Light/Dark Mode** - Toggle between themes with persistent settings  
+✔ **Interactive Quizzes** - Answer questions and get instant feedback  
+✔ **Review Mode** - See correct answers and explanations  
+✔ **JSON Import/Export** - Easily load and share quizzes  
+✔ **Responsive Design** - Works on desktop and mobile  
+✔ **Type-Safe** - Built with TypeScript for better code reliability
+
+## **🚀 Live Demo**
+
+Check out the app here: **[Demo Link](#)**
+
+## **🛠 Tech Stack**
+
+- **React 18** (Functional Components + Hooks)
+- **TypeScript** (Static Typing)
+- **styled-components** (CSS-in-JS Theming)
+- **LocalStorage** (Theme Persistence)
+- **Google Fonts** (Inter + Space Mono)
+
+## **📦 Installation**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Ghassanee/QCM-Quiz-Generator
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+3. Start the development server:
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+## **🔧 Project Structure**
+
+```
+src/
+├── components/       # Reusable UI components
+│   ├── Question.tsx  # Quiz question component
+│   ├── Quiz.tsx      # Main quiz interface
+│   └── ThemeToggle.tsx
+├── context/          # React context providers
+│   └── ThemeContext.tsx
+├── styles/           # Global styles
+│   └── GlobalStyles.ts
+├── types/            # TypeScript interfaces
+│   └── quiz.ts
+├── App.tsx           # Main app component
+└── index.tsx         # Entry point
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## **📝 How to Use**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Load a Quiz**: Upload a JSON file in the correct format (see `sample-quiz.json`).
+2. **Take the Quiz**: Select answers and submit to see your score.
+3. **Review Mode**: After submission, check explanations for each question.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **Sample Quiz Format**
 
-## Learn More
+```json
+{
+  "title": "JavaScript Quiz",
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is a closure?",
+      "options": [
+        { "text": "A function + its lexical scope", "correct": true },
+        { "text": "A JavaScript class", "correct": false }
+      ]
+    }
+  ]
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+## **📜 License**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+MIT © Ghassanee
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+**Enjoy quizzing!** 🎉  
+Feel free to contribute or report issues.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
