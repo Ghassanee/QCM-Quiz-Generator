@@ -5,6 +5,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { useTheme } from '@/context/ThemeContext';
 import { Logo } from '@/components/Logo';
+import { useRouter } from 'next/navigation';
 
 const AppHeader = styled.header`
   display: flex;
@@ -23,14 +24,25 @@ const AppContent = styled.main`
   padding: 4rem 0rem;
 `;
 
+const LogoContainer = styled.div`
+  cursor: pointer;
+`;
+
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
+  const router = useRouter();
 
   return (
     <StyledThemeProvider theme={theme}>
       <GlobalStyles />
       <AppHeader>
-        <Logo />
+        <LogoContainer
+          onClick={() => {
+            router.push('/');
+          }}
+        >
+          <Logo />
+        </LogoContainer>
         <ThemeToggle />
       </AppHeader>
       <AppContent>{children}</AppContent>

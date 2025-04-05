@@ -49,7 +49,7 @@ const QuestionContainer = styled.div<{
 
 const QuestionText = styled.h3`
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.text};
   margin-bottom: 1rem;
   display: flex;
@@ -80,7 +80,6 @@ const OptionItem = styled.div<{
     if ($isIncorrect) return theme.colors.error;
     return theme.colors.text;
   }};
-  font-weight: 700;
 
   &:hover {
     background: ${({ theme, $isCorrect, $isIncorrect }) => {

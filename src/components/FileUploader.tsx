@@ -17,6 +17,17 @@ const pulse = keyframes`
   100% { transform: scale(1); }
 `;
 
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const gradient = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
 const FileUploaderContainer = styled.div`
   background: ${({ theme }) => theme.colors.cardBg};
   color: ${({ theme }) => theme.colors.text};
@@ -25,6 +36,8 @@ const FileUploaderContainer = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   animation: ${fadeIn} 0.6s ease-out;
+  max-width: 600px;
+  margin: 0 auto;
 
   &:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
@@ -96,9 +109,73 @@ const ErrorMessage = styled.div`
   text-align: center;
 `;
 
-interface FileUploaderProps {
-  onUploadSuccess: (shareUrl: string) => void;
-}
+const LoadingSpinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(99, 102, 241, 0.2);
+  border-top: 4px solid #6366f1;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  margin: 20px auto;
+`;
+
+const SuccessMessage = styled.div`
+  text-align: center;
+  padding: 2rem;
+  animation: ${fadeIn} 0.6s ease-out;
+
+  h2 {
+    margin-bottom: 1.5rem;
+  }
+`;
+
+const ShareLink = styled.div`
+  background: ${({ theme }) => theme.colors.explanationBg};
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  word-break: break-all;
+  font-family: monospace;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const GradientText = styled.span`
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ${gradient} 3s ease infinite;
+  font-weight: 600;
+`;
+
+const ExpirationNotice = styled.div`
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: ${fadeIn} 0.6s ease-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &::before {
+    content: '⏳';
+    font-size: 1.5rem;
+  }
+`;
+
+const ExpirationText = styled.p`
+  margin: 0;
+  font-size: 0.95rem;
+
+  strong {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+`;
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
   const [error, setError] = useState('');
@@ -113,7 +190,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
     setError('');
 
     try {
-      // Validate file type
       if (file.type !== 'application/json') {
         throw new Error('Please upload a JSON file');
       }
@@ -134,7 +210,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
       setShareLink(shareUrl);
       onUploadSuccess(shareUrl);
 
-      // Copy to clipboard
       await navigator.clipboard.writeText(shareUrl);
     } catch (err) {
       setError(err.message || 'Failed to upload quiz');
@@ -145,33 +220,52 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
 
   return (
     <FileUploaderContainer>
-      <UploadArea>
-        <h2>Upload QCM Quiz File</h2>
-        <p>Drag and drop your JSON file here, or click to browse</p>
-        <UploadLabel>
-          {isUploading ? 'Uploading...' : 'Select File'}
-          <FileInput
-            type="file"
-            accept=".json"
-            onChange={handleFileUpload}
-            disabled={isUploading}
-          />
-        </UploadLabel>
-      </UploadArea>
+      {isUploading ? (
+        <div style={{ textAlign: 'center' }}>
+          <GradientText>Processing your file...</GradientText>
+          <LoadingSpinner />
+          <p>This might take a few seconds</p>
+        </div>
+      ) : shareLink ? (
+        <SuccessMessage>
+          <h2>
+            <GradientText>Upload Successful!</GradientText>
+          </h2>
+          <p>The share link has been copied to your clipboard</p>
+          <ShareLink>{shareLink}</ShareLink>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+          <ExpirationNotice>
+            <ExpirationText>
+              <strong>Note:</strong> This file will automatically expire and be deleted in{' '}
+              <strong>2 days</strong>
+            </ExpirationText>
+          </ExpirationNotice>
 
-      {shareLink && (
-        <SampleSection>
-          <h3>Shareable Link</h3>
-          <Pre onClick={() => navigator.clipboard.writeText(shareLink)}>{shareLink}</Pre>
-          <p>Link copied to clipboard!</p>
-        </SampleSection>
-      )}
+          <UploadLabel onClick={() => navigator.clipboard.writeText(shareLink)}>
+            Copy Again
+          </UploadLabel>
+        </SuccessMessage>
+      ) : (
+        <>
+          <UploadArea>
+            <h2>Upload QCM Quiz File</h2>
+            <p>Drag and drop your JSON file here, or click to browse</p>
+            <UploadLabel>
+              Select File
+              <FileInput
+                type="file"
+                accept=".json"
+                onChange={handleFileUpload}
+                disabled={isUploading}
+              />
+            </UploadLabel>
+          </UploadArea>
 
-      <SampleSection>
-        <h3>Sample QCM Quiz File</h3>
-        <Pre>{`{
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+
+          <SampleSection>
+            <h3>Sample QCM Quiz File</h3>
+            <Pre>{`{
   "title": "Sample Quiz",
   "description": "This is a sample quiz",
   "questions": [
@@ -185,7 +279,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
     }
   ]
 }`}</Pre>
-      </SampleSection>
+          </SampleSection>
+        </>
+      )}
     </FileUploaderContainer>
   );
 };
