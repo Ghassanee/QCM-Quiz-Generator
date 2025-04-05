@@ -1,12 +1,9 @@
 'use client';
 import FileUploader from '@/components/FileUploader';
-import { Logo } from '@/components/Logo';
 import Quiz from '@/components/Quiz';
-import ThemeToggle from '@/components/ThemeToggle';
-import { GlobalStyles } from '@/lib/styled-components';
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ThemeProvider, useTheme } from '@/context/ThemeContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation';
 
 interface QuizData {
@@ -68,7 +65,7 @@ const ThemeContent: React.FC = () => {
   const handleUploadSuccess = (shareUrl: string) => {
     setShowResults(false);
     setUserAnswers({});
-
+    setQuizData(null);
     // Redirect to the shared quiz URL
     router.push(shareUrl);
   };

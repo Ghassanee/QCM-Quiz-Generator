@@ -1,15 +1,8 @@
 'use client';
-import FileUploader from '@/components/FileUploader';
-import { Logo } from '@/components/Logo';
 import Quiz from '@/components/Quiz';
-import ThemeToggle from '@/components/ThemeToggle';
-import { GlobalStyles } from '@/lib/styled-components';
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ThemeProvider, useTheme } from '@/context/ThemeContext';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { QuizData } from '@/app/quiz/[id]/page';
-import { useRouter } from 'next/navigation';
 
 interface PageQuizProps {
   quizData: QuizData;
@@ -41,30 +34,6 @@ const Title = styled.h1`
   color: transparent;
   margin-bottom: 2rem;
   animation: ${fadeIn} 0.6s ease-out;
-`;
-
-const ResetButton = styled.button`
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  margin-top: 1.5rem;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.secondary};
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 `;
 
 export const PageQuiz: React.FC<PageQuizProps> = ({ quizData }) => {
