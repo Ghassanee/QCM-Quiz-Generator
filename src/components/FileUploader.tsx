@@ -176,26 +176,66 @@ const ExpirationText = styled.p`
     text-decoration: underline;
   }
 `;
+const TabContainer = styled.div`
+  display: flex;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  margin-bottom: 1.5rem;
+`;
+
+const TabButton = styled.button<{ $active: boolean }>`
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: ${({ theme, $active }) => ($active ? theme.colors.primary : theme.colors.textSecondary)};
+  border-bottom: 2px solid
+    ${({ theme, $active }) => ($active ? theme.colors.primary : 'transparent')};
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+const PasteArea = styled.textarea`
+  width: 100%;
+  min-height: 200px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.explanationBg};
+  color: ${({ theme }) => theme.colors.text};
+  margin: 1rem 0;
+  font-family: monospace;
+  resize: vertical;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+`;
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [shareLink, setShareLink] = useState('');
+  const [jsonContent, setJsonContent] = useState('');
+  const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('paste');
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const uploadData = async (data: string, fileName: string = 'quiz.json') => {
     setIsUploading(true);
     setError('');
 
     try {
-      if (file.type !== 'application/json') {
-        throw new Error('Please upload a JSON file');
-      }
+      JSON.parse(data);
 
       const formData = new FormData();
-      formData.append('file', file);
+      const blob = new Blob([data], { type: 'application/json' });
+      formData.append('file', blob, fileName);
 
       const response = await fetch('/api/quizzes', {
         method: 'POST',
@@ -216,6 +256,27 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const content = await file.text();
+      await uploadData(content, file.name);
+    } catch (err) {
+      setError(err.message || 'Failed to read file');
+      setIsUploading(false);
+    }
+  };
+
+  const handlePasteUpload = async () => {
+    if (!jsonContent.trim()) {
+      setError('Please paste your JSON content');
+      return;
+    }
+    await uploadData(jsonContent);
   };
 
   return (
@@ -247,19 +308,42 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
         </SuccessMessage>
       ) : (
         <>
-          <UploadArea>
-            <h2>Upload QCM Quiz File</h2>
-            <p>Drag and drop your JSON file here, or click to browse</p>
-            <UploadLabel>
-              Select File
-              <FileInput
-                type="file"
-                accept=".json"
-                onChange={handleFileUpload}
-                disabled={isUploading}
+          <TabContainer>
+            <TabButton $active={activeTab === 'paste'} onClick={() => setActiveTab('paste')}>
+              Paste JSON
+            </TabButton>
+            <TabButton $active={activeTab === 'upload'} onClick={() => setActiveTab('upload')}>
+              Upload File
+            </TabButton>
+          </TabContainer>
+
+          {activeTab === 'upload' ? (
+            <UploadArea>
+              <h2>Upload QCM Quiz File</h2>
+              <p>Drag and drop your JSON file here, or click to browse</p>
+              <UploadLabel>
+                Select File
+                <FileInput
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                />
+              </UploadLabel>
+            </UploadArea>
+          ) : (
+            <div>
+              <h2>Paste QCM Quiz JSON</h2>
+              <PasteArea
+                placeholder={`Paste your JSON content here...\n\nExample:\n{\n  "title": "My Quiz",\n  "questions": [\n    {\n      "question": "Sample question?",\n      "options": [\n        {"text": "Option 1", "correct": false},\n        {"text": "Option 2", "correct": true}\n      ]\n    }\n  ]\n}`}
+                value={jsonContent}
+                onChange={(e) => setJsonContent(e.target.value)}
               />
-            </UploadLabel>
-          </UploadArea>
+              <UploadLabel as="button" onClick={handlePasteUpload}>
+                Upload Pasted Content
+              </UploadLabel>
+            </div>
+          )}
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
