@@ -1,0 +1,86 @@
+{
+  "title": "Data Warehouse Quiz",
+  "description": "Test your understanding of the Data Warehouse concepts.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary purpose of a Data Warehouse?",
+      "options": [
+        {"text": "To store operational data in real time", "correct": false},
+        {"text": "To analyze historical data and support decision-making", "correct": true, "explanation": "Data Warehouses are optimized for querying historical data for business intelligence."}
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Which schema consists of a central fact table connected to multiple dimension tables?",
+      "options": [
+        {"text": "Star schema", "correct": true, "explanation": "A star schema has a fact table at the center with dimension tables surrounding it."},
+        {"text": "Snowflake schema", "correct": false}
+      ]
+    },
+    {
+      "id": 3,
+      "question": "What does ETL stand for?",
+      "options": [
+        {"text": "Extract, Transform, Load", "correct": true, "explanation": "ETL is the process of extracting data from sources, transforming it, and loading it into the data warehouse."},
+        {"text": "Evaluate, Test, Launch", "correct": false}
+      ]
+    },
+    {
+      "id": 4,
+      "question": "In a star schema, what is a 'dimension table'?",
+      "options": [
+        {"text": "A table that stores numeric measures", "correct": false},
+        {"text": "A table that stores descriptive information for analysis", "correct": true, "explanation": "Dimension tables contain details like names, dates, locations, etc., used for filtering or grouping data."}
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Which of the following is an example of a fact?",
+      "options": [
+        {"text": "Customer name", "correct": false},
+        {"text": "Total sales amount", "correct": true, "explanation": "Facts are numeric measurements, like total sales, that can be aggregated."}
+      ]
+    },
+    {
+      "id": 6,
+      "question": "What is OLAP used for?",
+      "options": [
+        {"text": "Performing transactions quickly", "correct": false},
+        {"text": "Analyzing multidimensional data", "correct": true, "explanation": "OLAP is used to analyze large volumes of data in multiple dimensions."}
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Which of these is NOT a common BI tool?",
+      "options": [
+        {"text": "Power BI", "correct": false},
+        {"text": "MySQL", "correct": true, "explanation": "MySQL is a database engine, not a BI visualization tool."}
+      ]
+    },
+    {
+      "id": 8,
+      "question": "What’s a key benefit of a Data Warehouse?",
+      "options": [
+        {"text": "Real-time updates of operational data", "correct": false},
+        {"text": "High performance queries on historical data", "correct": true, "explanation": "Data Warehouses are optimized for analytical queries, not real-time operations."}
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Which schema normalizes dimension tables into multiple related tables?",
+      "options": [
+        {"text": "Snowflake schema", "correct": true, "explanation": "In a snowflake schema, dimension tables are normalized to reduce redundancy."},
+        {"text": "Star schema", "correct": false}
+      ]
+    },
+    {
+      "id": 10,
+      "question": "What is a 'fact table' mainly composed of?",
+      "options": [
+        {"text": "Only textual data", "correct": false},
+        {"text": "Measures and foreign keys to dimensions", "correct": true, "explanation": "Fact tables contain measures and keys that link to dimension tables."}
+      ]
+    }
+  ]
+}
