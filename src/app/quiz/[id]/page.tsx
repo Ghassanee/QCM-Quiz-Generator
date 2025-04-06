@@ -18,11 +18,11 @@ export interface QuizData {
 }
 
 interface QuizPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function QuizPage({ params }: QuizPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   try {
     await dbConnect();
