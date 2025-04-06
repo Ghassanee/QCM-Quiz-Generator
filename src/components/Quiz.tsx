@@ -16,6 +16,7 @@ interface QuizProps {
     questions: Array<{
       id: number;
       question: string;
+      multipleCorrect?: boolean;
       options: Array<{
         text: string;
         correct: boolean;
@@ -23,8 +24,8 @@ interface QuizProps {
       }>;
     }>;
   };
-  onSubmit: (answers: { [key: number]: number }) => void;
-  userAnswers: { [key: number]: number };
+  onSubmit: (answers: { [key: number]: number[] }) => void; // Updated to accept array of selected options
+  userAnswers: { [key: number]: number[] }; // Updated to store arrays
   reviewMode: boolean;
 }
 
@@ -130,16 +131,32 @@ const ResetButton = styled.button`
 `;
 
 const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode }) => {
-  const [currentAnswers, setCurrentAnswers] = useState<{ [key: number]: number }>(userAnswers);
+  const [currentAnswers, setCurrentAnswers] = useState<{ [key: number]: number[] }>(userAnswers);
   const router = useRouter();
 
   const handleOptionSelect = (questionId: number, optionIndex: number) => {
     if (reviewMode) return;
 
-    setCurrentAnswers((prev) => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
+    setCurrentAnswers((prev) => {
+      const question = quizData.questions.find((q) => q.id === questionId);
+      const currentSelections = prev[questionId] || [];
+
+      if (question?.multipleCorrect) {
+        // For multiple correct questions, toggle the selection
+        return {
+          ...prev,
+          [questionId]: currentSelections.includes(optionIndex)
+            ? currentSelections.filter((idx) => idx !== optionIndex)
+            : [...currentSelections, optionIndex],
+        };
+      } else {
+        // For single answer questions, replace the selection
+        return {
+          ...prev,
+          [questionId]: [optionIndex],
+        };
+      }
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -153,12 +170,27 @@ const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode
 
   const calculateScore = (): number => {
     let score = 0;
+
     quizData.questions.forEach((question) => {
-      const selectedOptionIndex = currentAnswers[question.id];
-      if (selectedOptionIndex !== undefined && question.options[selectedOptionIndex].correct) {
+      const selectedIndices = currentAnswers[question.id] || [];
+      const correctIndices = question.options
+        .map((opt, idx) => (opt.correct ? idx : -1))
+        .filter((idx) => idx !== -1);
+
+      // For multiple correct questions, only count if ALL correct options are selected and NO incorrect ones
+      if (question.multipleCorrect) {
+        const allCorrectSelected = correctIndices.every((idx) => selectedIndices.includes(idx));
+        const noIncorrectSelected = selectedIndices.every((idx) => question.options[idx].correct);
+        if (allCorrectSelected && noIncorrectSelected) {
+          score++;
+        }
+      }
+      // For single answer questions
+      else if (selectedIndices.length === 1 && question.options[selectedIndices[0]].correct) {
         score++;
       }
     });
+
     return score;
   };
 
@@ -179,7 +211,7 @@ const Quiz: React.FC<QuizProps> = ({ quizData, onSubmit, userAnswers, reviewMode
             key={question.id}
             question={question}
             questionNumber={index + 1}
-            selectedOption={currentAnswers[question.id]}
+            selectedOptions={currentAnswers[question.id] || []}
             onSelect={handleOptionSelect}
             reviewMode={reviewMode}
           />

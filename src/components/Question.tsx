@@ -15,9 +15,10 @@ interface QuestionProps {
       correct: boolean;
       explanation?: string;
     }>;
+    multipleCorrect?: boolean; // New field to indicate multiple correct answers
   };
   questionNumber: number;
-  selectedOption?: number;
+  selectedOptions?: number[]; // Changed from selectedOption to selectedOptions (array)
   onSelect: (questionId: number, optionIndex: number) => void;
   reviewMode: boolean;
 }
@@ -59,15 +60,17 @@ const QuestionText = styled.h3`
 const OptionItem = styled.div<{
   $isCorrect?: boolean;
   $isIncorrect?: boolean;
+  $isSelected?: boolean;
 }>`
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   cursor: pointer;
-  background: ${({ $isCorrect, $isIncorrect }) => {
+  background: ${({ $isCorrect, $isIncorrect, $isSelected, theme }) => {
     if ($isCorrect) return '#d1fae5';
     if ($isIncorrect) return '#fee2e2';
+    if ($isSelected) return theme.mode === 'light' ? '#e0e7ff' : '#3730a3';
     return 'transparent';
   }};
   border-left: ${({ $isCorrect, $isIncorrect }) => {
@@ -119,45 +122,75 @@ const OptionInput = styled.input`
   margin-right: 10px;
 `;
 
+const MultipleSelectNotice = styled.div`
+  background: ${({ theme }) => theme.colors.explanationBg};
+  color: ${({ theme }) => theme.colors.text};
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  display: inline-block;
+`;
+
 const Question: React.FC<QuestionProps> = ({
   question,
   questionNumber,
-  selectedOption,
+  selectedOptions = [],
   onSelect,
   reviewMode,
 }) => {
-  const correctOptionIndex = question.options.findIndex((opt) => opt.correct);
-  const isCorrect = reviewMode && selectedOption === correctOptionIndex;
+  // Determine if all correct options are selected
+  const correctOptionIndices = question.options
+    .map((opt, idx) => (opt.correct ? idx : -1))
+    .filter((idx) => idx !== -1);
+
+  const allCorrectSelected = correctOptionIndices.every((idx) => selectedOptions.includes(idx));
+  const anyIncorrectSelected = selectedOptions.some((idx) => !question.options[idx].correct);
+
+  const isFullyCorrect = reviewMode && allCorrectSelected && !anyIncorrectSelected;
+  const isPartiallyCorrect =
+    reviewMode && selectedOptions.some((idx) => question.options[idx].correct);
 
   return (
     <QuestionContainer
-      $isCorrect={reviewMode && isCorrect}
-      $isIncorrect={reviewMode && !isCorrect && selectedOption !== undefined}
+      $isCorrect={isFullyCorrect}
+      $isIncorrect={reviewMode && !isFullyCorrect && selectedOptions.length > 0}
     >
       <QuestionText>
         {questionNumber}. {question.question}
         {reviewMode && (
-          <StatusIndicator $isCorrect={isCorrect}>{isCorrect ? ' ✓' : ' ✗'}</StatusIndicator>
+          <StatusIndicator $isCorrect={isFullyCorrect}>
+            {isFullyCorrect ? ' ✓' : isPartiallyCorrect ? ' ~' : ' ✗'}
+          </StatusIndicator>
         )}
       </QuestionText>
+
+      {question.multipleCorrect && (
+        <MultipleSelectNotice>
+          Select all that apply (multiple correct answers)
+        </MultipleSelectNotice>
+      )}
 
       <OptionsContainer>
         {question.options.map((option, index) => {
           const isOptionCorrect = reviewMode && option.correct;
-          const isOptionIncorrect = reviewMode && index === selectedOption && !option.correct;
+          const isOptionIncorrect =
+            reviewMode && selectedOptions.includes(index) && !option.correct;
+          const isSelected = selectedOptions.includes(index);
 
           return (
             <OptionItem
               key={index}
               $isCorrect={isOptionCorrect}
               $isIncorrect={isOptionIncorrect}
+              $isSelected={isSelected && !reviewMode}
               onClick={() => !reviewMode && onSelect(question.id, index)}
             >
               <OptionLabel $reviewMode={reviewMode}>
                 <OptionInput
-                  type="radio"
+                  type={question.multipleCorrect ? 'checkbox' : 'radio'}
                   name={`question-${question.id}`}
-                  checked={selectedOption === index}
+                  checked={selectedOptions.includes(index)}
                   onChange={() => {}}
                   disabled={reviewMode}
                 />

@@ -9,7 +9,7 @@ interface PageQuizProps {
 }
 
 interface UserAnswers {
-  [key: number]: number;
+  [key: number]: number[];
 }
 
 const fadeIn = keyframes`

@@ -1,10 +1,10 @@
 'use client';
-import FileUploader from '@/components/FileUploader';
 import Quiz from '@/components/Quiz';
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation';
+import FileUploader from '@/components/FileUploader/FileUploader';
 
 interface QuizData {
   title: string;
@@ -21,7 +21,7 @@ interface QuizData {
 }
 
 interface UserAnswers {
-  [key: number]: number;
+  [key: number]: number[];
 }
 
 const fadeIn = keyframes`
@@ -35,17 +35,6 @@ const AppContainer = styled.div`
   padding: 2rem;
   min-height: 100vh;
   position: relative;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 2rem;
-  animation: ${fadeIn} 0.6s ease-out;
 `;
 
 function App() {
@@ -77,7 +66,6 @@ const ThemeContent: React.FC = () => {
 
   return (
     <AppContainer>
-      <Title>Quizmo</Title>
       {!quizData ? (
         <FileUploader onUploadSuccess={handleUploadSuccess} />
       ) : showResults ? (
