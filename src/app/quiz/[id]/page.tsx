@@ -34,7 +34,7 @@ async function QuizPage({ params }: QuizPageProps) {
       return (
         <div className="text-center py-20">
           <h1 className="text-2xl font-bold">Quiz Not Found</h1>
-          <p className="mt-2">The requested quiz doesn't exist or has been removed.</p>
+          <p className="mt-2">The requested quiz doesn&apos;t exist or has been removed.</p>
         </div>
       );
     }
