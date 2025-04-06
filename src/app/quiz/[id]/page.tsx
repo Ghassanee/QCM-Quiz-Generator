@@ -1,7 +1,7 @@
 // src/app/quiz/[id]/page.tsx
+import Quiz from '@/app/models/Quiz';
 import { PageQuiz } from '@/components/PageQuiz';
-import { readFile } from 'fs/promises';
-import path from 'path';
+import dbConnect from '@/lib/mongodb';
 
 export interface QuizData {
   title: string;
@@ -18,34 +18,30 @@ export interface QuizData {
 }
 
 interface QuizPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 async function QuizPage({ params }: QuizPageProps) {
-  const { id } = await params;
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-  const filePath = path.join(uploadDir, `${id}.json`);
-  const metaPath = path.join(uploadDir, `${id}.meta.json`);
+  const { id } = params;
 
   try {
-    // Check metadata first
-    const metaData = JSON.parse(await readFile(metaPath, 'utf-8'));
+    await dbConnect();
+
+    // Find the quiz in MongoDB
+    const quiz = await Quiz.findOne({ quizId: id });
+
+    if (!quiz) {
+      return (
+        <div className="text-center py-20">
+          <h1 className="text-2xl font-bold">Quiz Not Found</h1>
+          <p className="mt-2">The requested quiz doesn't exist or has been removed.</p>
+        </div>
+      );
+    }
+
+    // Check if quiz is expired (though MongoDB TTL should handle this)
     const now = new Date();
-
-    if (new Date(metaData.expiresAt) < now) {
-      // Delete expired files
-      await Promise.allSettled([
-        readFile(filePath)
-          .then(() =>
-            // Only delete if file exists
-            Promise.all([
-              import('fs/promises').then((fs) => fs.unlink(filePath)),
-              import('fs/promises').then((fs) => fs.unlink(metaPath)),
-            ])
-          )
-          .catch(() => {}),
-      ]);
-
+    if (new Date(quiz.expiresAt) < now) {
       return (
         <div className="text-center py-20">
           <h1 className="text-2xl font-bold">Quiz Expired</h1>
@@ -54,21 +50,15 @@ async function QuizPage({ params }: QuizPageProps) {
       );
     }
 
-    // Load and display the quiz
-    const fileContents = await readFile(filePath, 'utf8');
-    const quizData: QuizData = JSON.parse(fileContents);
-
+    // Parse and display the quiz
+    const quizData: QuizData = JSON.parse(quiz.content);
     return <PageQuiz quizData={quizData} />;
   } catch (error) {
     console.error('Error loading quiz:', error);
     return (
       <div className="text-center py-20">
-        <h1 className="text-2xl font-bold">Quiz Not Found</h1>
-        <p className="mt-2">
-          {error instanceof Error && error.message.includes('ENOENT')
-            ? "The requested quiz doesn't exist or has been removed."
-            : 'An error occurred while loading the quiz.'}
-        </p>
+        <h1 className="text-2xl font-bold">Error Loading Quiz</h1>
+        <p className="mt-2">An error occurred while loading the quiz. Please try again later.</p>
       </div>
     );
   }
