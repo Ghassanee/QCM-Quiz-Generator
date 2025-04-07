@@ -3,6 +3,7 @@ import { TabComponentProps } from './types';
 import styled from 'styled-components';
 import {
   AddButton,
+  AddQuestionButton,
   FormContainer,
   FormGroup,
   FormInput,
@@ -212,7 +213,9 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
           </QuestionCard>
         ))}
 
-        <AddButton onClick={addQuestion}>Add Question</AddButton>
+        <AddQuestionButton as="button" onClick={addQuestion}>
+          Add Question
+        </AddQuestionButton>
       </QuestionsContainer>
 
       <UploadLabel

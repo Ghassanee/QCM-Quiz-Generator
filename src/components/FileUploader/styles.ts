@@ -168,6 +168,8 @@ export const UploadLabel = styled.label`
   position: relative;
   overflow: hidden;
   border: none;
+  width: 100%;
+  margin-top: 5rem;
 
   &:before {
     content: '';
@@ -559,6 +561,50 @@ export const AddButton = styled.button`
     background: #4f46e5;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+`;
+
+export const AddQuestionButton = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #4f46e5;
+  color: white;
+  padding: 0.85rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+  position: relative;
+  overflow: hidden;
+  border: none;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+  }
+
+  &:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   svg {
