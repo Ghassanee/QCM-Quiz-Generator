@@ -137,7 +137,7 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
         options: q.options.map((opt) => ({
           text: opt.text,
           correct: opt.correct,
-          reason: opt.reason || undefined, // Only include if not empty
+          reason: opt.reason || undefined,
         })),
       })),
     };
@@ -211,12 +211,14 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
                       <RemoveButton onClick={() => removeOption(q.id, optIndex)}>×</RemoveButton>
                     )}
                   </OptionItem>
-                  <FormTextarea
-                    value={opt.reason}
-                    onChange={(e) => updateOption(q.id, optIndex, 'reason', e.target.value)}
-                    placeholder={`Explanation for this option (optional)`}
-                    style={{ marginTop: '0.5rem', marginLeft: '2rem', minHeight: '60px' }}
-                  />
+                  {opt.correct && (
+                    <FormTextarea
+                      value={opt.reason}
+                      onChange={(e) => updateOption(q.id, optIndex, 'reason', e.target.value)}
+                      placeholder={`Explanation for this option (optional)`}
+                      style={{ marginBottom: '2rem', minHeight: '30px' }}
+                    />
+                  )}
                 </div>
               ))}
               <AddButton onClick={() => addOption(q.id)}>Add Option</AddButton>
