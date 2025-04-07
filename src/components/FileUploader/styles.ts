@@ -392,6 +392,7 @@ export const PasteArea = styled.textarea`
   font-size: 0.95rem;
   line-height: 1.6;
   transition: all 0.3s ease;
+  position: relative;
 
   &:focus {
     outline: none;
