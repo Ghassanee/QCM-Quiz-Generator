@@ -44,7 +44,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         >
           <Logo />
         </LogoContainer>
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </AppHeader>
       <AppContent>{children}</AppContent>
       <Footer />
