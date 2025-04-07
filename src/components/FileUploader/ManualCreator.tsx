@@ -27,8 +27,8 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
       id: 1,
       question: '',
       options: [
-        { text: '', correct: false },
-        { text: '', correct: false },
+        { text: '', correct: false, reason: '' },
+        { text: '', correct: false, reason: '' },
       ],
     },
   ]);
@@ -41,8 +41,8 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
         id: newId,
         question: '',
         options: [
-          { text: '', correct: false },
-          { text: '', correct: false },
+          { text: '', correct: false, reason: '' },
+          { text: '', correct: false, reason: '' },
         ],
       },
     ]);
@@ -63,7 +63,9 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
   const addOption = (questionId: number) => {
     setQuestions(
       questions.map((q) =>
-        q.id === questionId ? { ...q, options: [...q.options, { text: '', correct: false }] } : q
+        q.id === questionId
+          ? { ...q, options: [...q.options, { text: '', correct: false, reason: '' }] }
+          : q
       )
     );
   };
@@ -135,6 +137,7 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
         options: q.options.map((opt) => ({
           text: opt.text,
           correct: opt.correct,
+          reason: opt.reason || undefined, // Only include if not empty
         })),
       })),
     };
@@ -190,23 +193,31 @@ const ManualCreator: React.FC<TabComponentProps> = ({ isUploading, onUpload, set
             <FormGroup>
               <FormLabel>Options *</FormLabel>
               {q.options.map((opt, optIndex) => (
-                <OptionItem key={optIndex}>
-                  <OptionCheckbox
-                    type="checkbox"
-                    checked={opt.correct}
-                    onChange={(e) => updateOption(q.id, optIndex, 'correct', e.target.checked)}
+                <div key={optIndex}>
+                  <OptionItem>
+                    <OptionCheckbox
+                      type="checkbox"
+                      checked={opt.correct}
+                      onChange={(e) => updateOption(q.id, optIndex, 'correct', e.target.checked)}
+                    />
+                    <OptionInput
+                      type="text"
+                      value={opt.text}
+                      onChange={(e) => updateOption(q.id, optIndex, 'text', e.target.value)}
+                      placeholder={`Option ${optIndex + 1}`}
+                      required
+                    />
+                    {q.options.length > 2 && (
+                      <RemoveButton onClick={() => removeOption(q.id, optIndex)}>×</RemoveButton>
+                    )}
+                  </OptionItem>
+                  <FormTextarea
+                    value={opt.reason}
+                    onChange={(e) => updateOption(q.id, optIndex, 'reason', e.target.value)}
+                    placeholder={`Explanation for this option (optional)`}
+                    style={{ marginTop: '0.5rem', marginLeft: '2rem', minHeight: '60px' }}
                   />
-                  <OptionInput
-                    type="text"
-                    value={opt.text}
-                    onChange={(e) => updateOption(q.id, optIndex, 'text', e.target.value)}
-                    placeholder={`Option ${optIndex + 1}`}
-                    required
-                  />
-                  {q.options.length > 2 && (
-                    <RemoveButton onClick={() => removeOption(q.id, optIndex)}>×</RemoveButton>
-                  )}
-                </OptionItem>
+                </div>
               ))}
               <AddButton onClick={() => addOption(q.id)}>Add Option</AddButton>
             </FormGroup>

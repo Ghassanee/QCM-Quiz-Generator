@@ -6,6 +6,7 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { useTheme } from '@/context/ThemeContext';
 import { Logo } from '@/components/Logo';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 
 const AppHeader = styled.header`
   display: flex;
@@ -46,6 +47,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <ThemeToggle />
       </AppHeader>
       <AppContent>{children}</AppContent>
+      <Footer />
     </StyledThemeProvider>
   );
 }
