@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import {
+  CopyButton,
   ErrorMessage,
   ExpirationNotice,
   ExpirationText,
@@ -18,6 +19,7 @@ import {
 import FileUpload from './FileUpload';
 import JsonPaster from './JsonPaster';
 import ManualCreator from './ManualCreator';
+import { ExampleJson } from './ExampleJson';
 
 interface FileUploaderProps {
   onUploadSuccess: (shareUrl: string) => void;
@@ -180,33 +182,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess }) => {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          {activeTab !== 'manual' && (
-            <SampleSection>
-              <h3>Sample QCM Quiz File</h3>
-              <Pre>{`{
-  "title": "Sample Quiz",  // Required
-  "description": "Optional description",
-  "questions": [          // At least one required
-    {
-      "id": 1,            // Required, must be unique
-      "question": "Sample question?",  // Required
-      "multipleCorrect": false,  // Optional, defaults to false
-      "options": [        // At least 2 required
-        {
-          "text": "Option 1",  // Required
-          "correct": false,    // Required (boolean)
-          "explanation": "Optional explanation"
-        },
-        {
-          "text": "Option 2",
-          "correct": true     // At least one correct required
-        }
-      ]
-    }
-  ]
-}`}</Pre>
-            </SampleSection>
-          )}
+          {activeTab !== 'manual' && <ExampleJson />}
         </>
       )}
     </FileUploaderContainer>

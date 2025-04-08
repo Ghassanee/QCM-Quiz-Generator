@@ -677,3 +677,18 @@ export const QuestionHeader = styled.div`
 export const QuestionsContainer = styled.div`
   margin-top: 2.5rem;
 `;
+
+export const CopyButton = styled.button`
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #45a049;
+  }
+`;
