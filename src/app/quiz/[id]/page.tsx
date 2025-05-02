@@ -40,15 +40,15 @@ async function QuizPage({ params }: QuizPageProps) {
     }
 
     // Check if quiz is expired (though MongoDB TTL should handle this)
-    const now = new Date();
-    if (new Date(quiz.expiresAt) < now) {
-      return (
-        <div className="text-center py-20">
-          <h1 className="text-2xl font-bold">Quiz Expired</h1>
-          <p className="mt-2">This quiz was only available for 2 days and has now been removed.</p>
-        </div>
-      );
-    }
+    // const now = new Date();
+    // if (new Date(quiz.expiresAt) < now) {
+    //   return (
+    //     <div className="text-center py-20">
+    //       <h1 className="text-2xl font-bold">Quiz Expired</h1>
+    //       <p className="mt-2">This quiz was only available for 2 days and has now been removed.</p>
+    //     </div>
+    //   );
+    // }
 
     // Parse and display the quiz
     const quizData: QuizData = JSON.parse(quiz.content);
